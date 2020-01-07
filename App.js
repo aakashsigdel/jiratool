@@ -58,27 +58,34 @@ export default class App extends Component<Props> {
     const { hoursLogged, isLoading, numberOfTickets, syncDiabled } = this.state;
     return (
       <View style={styles.root}>
-        {isLoading && <Loader />}
-        <Text style={styles.instructions}>Username: </Text>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={this.handleTextInputChange}
-          value={this.state.username}
-        />
+        {isLoading && <Loader style={styles.loader} />}
+        <View style={styles.content}>
+          <View style={styles.inputAndButton}>
+            <View style={styles.textInputContainer}>
+              <Text style={styles.label}>Username: </Text>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={this.handleTextInputChange}
+                value={this.state.username}
+              />
+            </View>
+            <Button title="Get Hours" onPress={this.fetchHours} />
+          </View>
+          <View style={styles.result}>
+            {!isLoading && !!numberOfTickets && (
+              <React.Fragment>
+                <Text>{`Number of Tickets: ${numberOfTickets}`}</Text>
+                <Text>{`Hours Logged: ${hoursLogged} hours`}</Text>
+              </React.Fragment>
+            )}
+          </View>
+        </View>
         <Button
-          title="Get Hours"
-          style={styles.button}
-          onPress={this.fetchHours}
-        />
-        <Button
-          title="Sync"
-          style={styles.button}
+          title="Sync Project"
+          style={styles.syncButton}
           disabled={syncDiabled}
           onPress={this.sync}
         />
-        <Text>{numberOfTickets}</Text>
-        <Text>{hoursLogged}</Text>
-        <Text>{syncDiabled.toString()}</Text>
       </View>
     );
   }
@@ -86,11 +93,38 @@ export default class App extends Component<Props> {
 
 const styles = StyleSheet.create({
   root: {
-    padding: 32
+    padding: 32,
+    height: "100%",
+    width: "100%"
+  },
+  loader: {
+    position: "absolute",
+    right: 32,
+    top: 32
+  },
+  content: {},
+  inputAndButton: {
+    width: "55%",
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between"
+  },
+  textInputContainer: {},
+  label: {
+    marginBottom: 8
   },
   textInput: {
     color: "green",
     width: 300,
-    height: 40
+    height: 30
+  },
+  result: {
+    marginTop: 16,
+    height: 100
+  },
+  syncButton: {
+    position: "absolute",
+    right: 32,
+    bottom: 32
   }
 });

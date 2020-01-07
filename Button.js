@@ -4,13 +4,14 @@ import { TouchableOpacity, StyleSheet, Text } from "react-native";
 type Props = {
   title: string,
   onPress: () => void,
-  disabled: boolean
+  disabled: boolean,
+  style: any
 };
 
 export const Button = (props: Props) => (
   <TouchableOpacity
     onPress={props.onPress}
-    style={styles.button}
+    style={[styles.button, props.style]}
     activeOpacity={0.6}
     disabled={props.disabled}
   >
