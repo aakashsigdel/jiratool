@@ -10,6 +10,8 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Button } from "./Button";
 import { Loader } from "./Loader";
 
+import { fetchTicketHours, syncProject } from "./api";
+
 type Props = {};
 export default class App extends Component<Props> {
   constructor(props) {
@@ -33,16 +35,13 @@ export default class App extends Component<Props> {
       return;
     }
     this.setState({ isLoading: true });
-    const resp = await fetch(
-      "https://qa-tooling.xite.com/api/worklogs?team=XA"
-    );
-    const json = await resp.json();
-    const withOwner = json.filter(j => j.owner === username.toLowerCase());
 
-    const hoursLogged =
-      withOwner.reduce((acc, curr) => acc + curr.effort, 0) / 60 / 60;
+    const { numberOfTickets, hoursLogged } = await fetchTicketHours(
+      "XA",
+      username
+    );
     this.setState({
-      numberOfTickets: withOwner.length,
+      numberOfTickets,
       hoursLogged,
       isLoading: false
     });
@@ -51,7 +50,7 @@ export default class App extends Component<Props> {
   sync = async () => {
     this.setState({ isLoading: true, syncDiabled: true });
     setTimeout(() => this.setState({ syncDiabled: false }), 15000);
-    await fetch("https://qa-tooling.xite.com/api/teams/XA/sync");
+    await syncProject("XA");
     this.setState({ isLoading: false });
   };
 
